@@ -188,9 +188,16 @@ namespace prevody_ciselne_soustavy
 
         private void button2_Click(object sender, EventArgs e)
         {
-            int vystup = BinToDec(textBox1.Text);
-            textBox2.Text = vystup.ToString();
-            textBox3.Text = BinToHex(textBox1.Text);
+            try
+            {
+                int vystup = BinToDec(textBox1.Text);
+                textBox2.Text = vystup.ToString();
+                textBox3.Text = BinToHex(textBox1.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Zadané číslo je příliš velké nebo malé!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -209,8 +216,15 @@ namespace prevody_ciselne_soustavy
 
         private void button4_Click(object sender, EventArgs e)
         {
-            textBox1.Text = HexToBin(textBox3.Text);
-            textBox2.Text = HexToDec(textBox1.Text).ToString();
+            try
+            {
+                textBox1.Text = HexToBin(textBox3.Text);
+                textBox2.Text = HexToDec(textBox1.Text).ToString();
+            }
+            catch
+            {
+                MessageBox.Show("Zadané číslo je příliš velké nebo malé!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
