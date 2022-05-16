@@ -52,23 +52,46 @@ namespace prevody_ciselne_soustavy
         }
         private int HexToDec(string value)
         {
-            int vysledek = 0;
-            int pocet = value.Length - 1;
-            for (int i = 0; i < value.Length; i++)
-            {
-                int x = 0;
-                switch (value[i])
-                {
-                    case 'A': x = 10; break;
-                    case 'B': x = 11; break;
-                    case 'C': x = 12; break;
-                    case 'D': x = 13; break;
-                    case 'E': x = 14; break;
-                    case 'F': x = 15; break;
-                    default: x = -48/*ascii kod*/ + (int)value[i]; break;
-                }
-                vysledek += x * (int)(Math.Pow(16, pocet));
-            }
+
+            //int vysledek = 0;
+            //int pocet = value.Length - 1;
+            //for (int i = 0; i < value.Length; i++)
+            //{
+            //  int x = 0;
+            // switch (value[i])
+            //{
+            //  case 'A': x = 10; break;
+            //case 'B': x = 11; break;
+            //case 'C': x = 12; break;
+            //case 'D': x = 13; break;
+            //case 'E': x = 14; break;
+            //   case 'F': x = 15; break;
+            // default: x = -48/*ascii kod*/ + (int)value[i]; break;
+            // }
+            //vysledek += x * (int)(Math.Pow(16, pocet));
+            // }
+            //return vysledek;
+            /* int pomocna = 1;
+
+             for (int i = value.Length - 1; i >= 0; i--)
+             {
+                 int x = 0;
+                 switch (value[i])
+                 {
+                     case 'A': x = 10; break;
+                     case 'B': x = 11; break;
+                     case 'C': x = 12; break;
+                     case 'D': x = 13; break;
+                     case 'E': x = 14; break;
+                     case 'F': x = 15; break;
+                     default: x = Int32.Parse(value[i].ToString()); break;
+                 }
+                 vysledek += (x * pomocna);
+                 pomocna *= 16;
+             }
+             return vysledek;
+            */
+            int vysledek = Convert.ToInt32(value, 16);
             return vysledek;
         }
         private string DecToHex(int x)
@@ -103,9 +126,7 @@ namespace prevody_ciselne_soustavy
         }
         private string HexToBin(string hex)
         {
-            string bin = "";
-            bin = (Convert.ToInt32(hex, 16), 2).ToString();
-            return bin;
+            return DecToBin(HexToDec(hex));
         }
         private string BinToHex(string bin)
         {
@@ -126,9 +147,7 @@ namespace prevody_ciselne_soustavy
             try
             {
                 if (e.KeyChar != '0' && e.KeyChar != '1') { e.Handled = true; }
-                int vystup = BinToDec(textBox1.Text);
-                textBox2.Text = vystup.ToString();
-                textBox3.Text = BinToHex(textBox1.Text);
+             
             }
             catch
             {
@@ -145,9 +164,6 @@ namespace prevody_ciselne_soustavy
                 {
                     e.Handled = true;
                 }
-                string vystup = DecToHex(int.Parse(textBox2.Text));
-                textBox3.Text = vystup;
-                textBox1.Text = DecToBin(int.Parse(textBox2.Text));
             }
             catch
             {
@@ -158,21 +174,43 @@ namespace prevody_ciselne_soustavy
 
         private void textBox3_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if ((int)e.KeyChar < 48 || (int)e.KeyChar > 70 || (int)e.KeyChar > 57 && (int)e.KeyChar < 65)
+            if (!Char.IsDigit(e.KeyChar) && (e.KeyChar < 'A' || e.KeyChar > 'F')) 
             {
-                e.Handled = true;
+                e.Handled = true; 
+                return; 
             }
-            textBox1.Text = HexToBin(textBox3.Text);
-            int vystup = HexToDec(textBox1.Text);
-            textBox2.Text = vystup.ToString();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            textBox1.Clear();
-            textBox2.Clear();
-            textBox3.Clear();
             Application.Restart();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int vystup = BinToDec(textBox1.Text);
+            textBox2.Text = vystup.ToString();
+            textBox3.Text = BinToHex(textBox1.Text);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string vystup = DecToHex(int.Parse(textBox2.Text));
+                textBox3.Text = vystup;
+                textBox1.Text = DecToBin(int.Parse(textBox2.Text));
+            }
+            catch
+            {
+                MessageBox.Show("Zadané číslo je příliš velké nebo malé!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = HexToBin(textBox3.Text);
+            textBox2.Text = HexToDec(textBox1.Text).ToString();
         }
     }
 }
